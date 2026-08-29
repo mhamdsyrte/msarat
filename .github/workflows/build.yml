@@ -59,11 +59,11 @@ jobs:
       - name: Prepare android project
         run: cp -r app android/app
 
-      - name: Build APK with buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
-        with:
-          workdir: android
-          buildozer_version: stable
+      - name: Build APK with buildozer (official image)
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}/android":/home/user/hostcwd \
+            kivy/buildozer android debug
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
