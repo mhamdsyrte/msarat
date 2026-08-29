@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ app_name }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="app">
+
+  <header class="masthead">
+    <div class="top-actions">
+      <button id="about-btn" class="icon-btn" type="button" aria-label="about" title="حول التطبيق">ℹ️</button>
+      <button id="settings-btn" class="icon-btn" type="button" aria-label="settings" title="الإعدادات">⚙️</button>
+    </div>
+    <img src="{{ url_for('static', filename='logo.svg') }}" alt="logo" class="masthead-logo">
+    <h1 id="t-app-title">{{ app_name }}</h1>
+    <p class="tagline" id="t-tagline"></p>
+  </header>
+
+  <section class="loader-card">
+    <label for="url-input" class="field-label" id="t-url-label"></label>
+    <div class="url-row">
+      <input id="url-input" type="url" placeholder="https://youtube.com/watch?v=... أو playlist?list=..." dir="ltr" inputmode="url" autocomplete="off">
+      <button id="fetch-btn" class="btn btn-primary" id-text="fetch_btn"></button>
+    </div>
+    <p id="fetch-status" class="status-text" role="status"></p>
+  </section>
+
+  <!-- ===== نتيجة فيديو مفرد ===== -->
+  <section id="result" class="result hidden">
+
+    <div class="video-card">
+      <img id="thumb" class="thumb" alt="">
+      <div class="video-meta">
+        <h2 id="v-title"></h2>
+        <p id="v-sub" class="muted"></p>
+      </div>
+    </div>
+
+    <div class="channel-strip">
+      <h3 class="channel-label" id="t-section-video"></h3>
+      <div id="video-options" class="options-grid"></div>
+    </div>
+
+    <div class="channel-strip">
+      <h3 class="channel-label" id="t-section-audio"></h3>
+      <div id="audio-options" class="options-list"></div>
+    </div>
+
+    <div class="channel-strip">
+      <h3 class="channel-label"><span id="t-section-sub"></span> <span class="optional" id="t-optional"></span></h3>
+      <select id="sub-select" class="select">
+        <option value="" id="t-no-sub-opt"></option>
+      </select>
+    </div>
+
+    <label class="checkbox-row">
+      <input type="checkbox" id="thumb-checkbox">
+      <span id="t-save-thumb"></span>
+    </label>
+
+    <button id="download-btn" class="btn btn-record" id-text="download_btn"></button>
+    <p id="download-status" class="status-text" role="status"></p>
+
+  </section>
+
+  <!-- ===== نتيجة قائمة تشغيل ===== -->
+  <section id="playlist-result" class="result hidden">
+    <div class="playlist-header">
+      <h2 id="pl-title"></h2>
+      <p class="muted"><span id="pl-badge"></span></p>
+    </div>
+
+    <div class="playlist-controls">
+      <button id="pl-select-all" class="btn btn-ghost" type="button"></button>
+      <button id="pl-deselect-all" class="btn btn-ghost" type="button"></button>
+    </div>
+
+    <div id="pl-entries" class="playlist-entries"></div>
+
+    <div class="channel-strip">
+      <h3 class="channel-label" id="t-pl-quality"></h3>
+      <select id="pl-quality-select" class="select">
+        <option value="2160">4K (2160p)</option>
+        <option value="1440">1440p</option>
+        <option value="1080" selected>1080p</option>
+        <option value="720">720p</option>
+        <option value="480">480p</option>
+        <option value="360">360p</option>
+        <option value="best">أفضل جودة متاحة</option>
+      </select>
+    </div>
+
+    <div class="channel-strip">
+      <h3 class="channel-label" id="t-pl-audio-lang"></h3>
+      <select id="pl-lang-select" class="select">
+        <option value="any">أي لغة متاحة</option>
+      </select>
+    </div>
+
+    <div class="channel-strip">
+      <h3 class="channel-label"><span id="t-pl-sub"></span> <span class="optional" id="t-pl-sub-optional"></span></h3>
+      <select id="pl-sub-select" class="select">
+        <option value="" id="t-pl-no-sub-opt"></option>
+      </select>
+    </div>
+
+    <label class="checkbox-row">
+      <input type="checkbox" id="pl-thumb-checkbox">
+      <span id="t-pl-save-thumb"></span>
+    </label>
+
+    <button id="pl-download-btn" class="btn btn-record" type="button"></button>
+    <div id="pl-progress" class="playlist-progress hidden">
+      <div class="progress-bar-track"><div id="pl-progress-fill" class="progress-bar-fill"></div></div>
+      <p id="pl-progress-text" class="status-text"></p>
+    </div>
+  </section>
+
+</div>
+
+<!-- ===== نافذة الإعدادات ===== -->
+<div id="settings-modal" class="modal-overlay hidden">
+  <div class="modal">
+    <h2 id="t-settings-title"></h2>
+
+    <div class="modal-row">
+      <label id="t-settings-download-dir"></label>
+      <div class="url-row">
+        <input id="download-dir-input" type="text" dir="ltr" class="select">
+        <button id="download-dir-save" class="btn btn-primary" id-text="settings_change"></button>
+      </div>
+    </div>
+
+    <div class="modal-row">
+      <label id="t-settings-language"></label>
+      <select id="language-select" class="select"></select>
+    </div>
+
+    <div class="modal-row">
+      <label id="t-settings-theme"></label>
+      <div class="theme-toggle">
+        <button id="theme-light-btn" class="btn btn-ghost" type="button" id-text="theme_light"></button>
+        <button id="theme-dark-btn" class="btn btn-ghost" type="button" id-text="theme_dark"></button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary modal-close" data-close="settings-modal">✕</button>
+  </div>
+</div>
+
+<!-- ===== نافذة حول التطبيق ===== -->
+<div id="about-modal" class="modal-overlay hidden">
+  <div class="modal about-modal">
+    <img src="{{ url_for('static', filename='logo.svg') }}" alt="logo" class="about-logo">
+    <h2>{{ app_name }}</h2>
+    <p class="muted"><span id="t-about-version"></span>: {{ app_version }}</p>
+    <p class="muted"><span id="t-about-dev"></span>: hamziwy-py</p>
+    <div class="about-links">
+      <a href="{{ github_url }}" target="_blank" rel="noopener" id="t-about-source"></a>
+      <a href="https://wa.me/963995385471" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="https://instagram.com/mhamd.tresh" target="_blank" rel="noopener">Instagram</a>
+    </div>
+    <button class="btn btn-primary modal-close" data-close="about-modal">✕</button>
+  </div>
+</div>
+
+<!-- ===== شاشة البداية (Splash) — مرحلتين: بطاقة المطوّر ثم شعار التطبيق ===== -->
+<div id="splash" class="splash">
+
+  <div id="splash-dev" class="splash-stage splash-dev-stage">
+    <div class="dev-mark">
+      <span class="dev-bracket">&lt;</span>
+      <span class="dev-name">hamziwy<span class="dev-dash">-</span>py</span>
+      <span class="dev-bracket">/&gt;</span>
+    </div>
+    <div class="dev-tagline">Developer</div>
+  </div>
+
+  <div id="splash-app" class="splash-stage splash-app-stage hidden">
+    <img src="{{ url_for('static', filename='logo.svg') }}" alt="logo" class="splash-logo">
+    <div class="splash-title">{{ app_name }}</div>
+    <div class="splash-credit">by hamziwy-py</div>
+  </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='i18n.js') }}"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

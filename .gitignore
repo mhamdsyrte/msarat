@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+venv/
+
+# App runtime
+app/settings.json
+
+# PyInstaller
+desktop/build/
+desktop/dist/
+*.spec.bak
+
+# Buildozer / python-for-android
+android/.buildozer/
+android/bin/
+android/app/          # نسخة مؤقتة تُنشأ أثناء CI من مجلد app/ الأصلي
+android/ffmpeg_bin/
+
+# OS
+.DS_Store
+Thumbs.db
