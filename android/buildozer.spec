@@ -14,7 +14,7 @@ version = 2.0.0
 # بدل الحاجة لكتابة واجهة Kivy من الصفر
 p4a.bootstrap = webview
 
-requirements = python3==3.11.9,flask,yt-dlp,certifi,mutagen,brotli,websockets
+requirements = python3,flask,yt-dlp,certifi,mutagen,brotli,websockets
 
 orientation = portrait
 fullscreen = 0
