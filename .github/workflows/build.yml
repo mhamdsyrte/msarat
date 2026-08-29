@@ -7,7 +7,6 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  # ============== وندوز ==============
   build-windows:
     runs-on: windows-latest
     steps:
@@ -27,7 +26,6 @@ jobs:
           name: Masarat-windows
           path: desktop/dist/Masarat/
 
-  # ============== لينكس ==============
   build-linux:
     runs-on: ubuntu-latest
     steps:
@@ -48,23 +46,35 @@ jobs:
           name: Masarat-linux
           path: desktop/dist/Masarat/
 
-  # ============== أندرويد (APK) ==============
   build-android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
-      # ينسخ كود التطبيق المشترك (app/) داخل مجلد android حتى يقدر
-      # buildozer يرفقه بالـ APK (main.py بأندرويد يستورد من app/)
       - name: Prepare android project
         run: cp -r app android/app
 
-      - name: Build APK with buildozer (official image)
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system dependencies
         run: |
-          docker run --rm \
-            --entrypoint bash \
-            -v "${{ github.workspace }}/android":/home/user/hostcwd \
-            kivy/buildozer -c "yes | buildozer android debug"
+          sudo apt-get update
+          sudo apt-get install -y \
+            ant autoconf automake autopoint ccache cmake g++ gcc git \
+            lbzip2 libffi-dev libltdl-dev libtool libssl-dev make \
+            openjdk-17-jdk patch pkg-config python3-dev python3-venv \
+            unzip wget zip
+
+      - name: Install buildozer & cython
+        run: |
+          pip install --upgrade pip
+          pip install buildozer==1.5.0 cython==0.29.36
+
+      - name: Build APK with buildozer
+        working-directory: android
+        run: yes | buildozer android debug
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
@@ -72,7 +82,6 @@ jobs:
           name: Masarat-android-apk
           path: android/bin/*.apk
 
-  # ============== إصدار (Release) تلقائي عند وضع تاق v* ==============
   release:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: [build-windows, build-linux, build-android]
