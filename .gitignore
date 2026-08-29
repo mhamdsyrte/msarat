@@ -22,3 +22,4 @@ android/ffmpeg_bin/
 # OS
 .DS_Store
 Thumbs.db
+build_log.txt
