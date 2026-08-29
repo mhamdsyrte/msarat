@@ -72,7 +72,7 @@ pyinstaller masarat.spec --noconfirm
 
 ## ⚙️ الحالة الحالية للبراندنج
 
-- ✅ رابط GitHub: `https://github.com/hamziwy-py/msarat`
+- ✅ رابط GitHub: `https://github.com/mhamdsyrte/msarat`
 - ✅ WhatsApp: `963995385471`
 - ✅ Instagram: `mhamd.tresh`
 - ✅ الشعار (`app/static/logo.svg` و`logo.png`, وأيقونات سطح المكتب/أندرويد): نهائي — تصميم "مسارات" (3 خطوط فيديو/صوت/ترجمة تتجمع بسهم تحميل واحد)
@@ -100,7 +100,7 @@ git add -A
 git commit -m "مسارات v2.0.0"
 
 # اربطه بمستودعك على GitHub (لازم تكون سويت المستودع فاضي من موقع GitHub مسبقاً)
-git remote add origin https://github.com/hamziwy-py/msarat.git
+git remote add origin https://github.com/mhamdsyrte/msarat.git
 ```
 
 **تسجيل الدخول من ترمكس**: GitHub ما يقبل كلمة السر العادية من التيرمينال —

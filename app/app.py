@@ -33,7 +33,7 @@ app = Flask(__name__)
 
 APP_NAME = "مسارات"
 APP_VERSION = "2.0.0"
-GITHUB_URL = "https://github.com/hamziwy-py/msarat"
+GITHUB_URL = "https://github.com/mhamdsyrte/msarat"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SETTINGS_PATH = os.path.join(BASE_DIR, "settings.json")
